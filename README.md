@@ -1,147 +1,138 @@
 # Seal Detector Pro
 
-Seal Detector Pro is a **professional Linux desktop application** for real-time detection and inspection of **container door security seals** used in ports, logistics hubs, and cargo terminals.
+> **Professional AI-powered container door security seal inspection for Linux.**
 
-The application uses **AI-powered computer vision** to analyze live video streams from cameras and automatically detect the presence and condition of container seals, helping improve inspection speed, consistency, and operational security.
-
-Seal Detector Pro runs as a **native desktop application** (no browser required), supports **GPU acceleration**, and includes a **remote license control system** suitable for commercial deployment.
-
----
-
-## Features
-
-- 🔐 **Automatic detection of container door security seals**
-- 📦 Designed for **ports, terminals, and logistics operations**
-- 🎥 Supports multiple video sources:
-  - USB webcams
-  - RTSP IP cameras
-  - HTTP/MJPEG streams
-  - Video files
-- ⚡ **GPU acceleration (CUDA supported)**
-- 🖥️ Native Linux desktop application (Electron)
-- 🌐 No external browser required
-- 📦 Portable **AppImage** and installable **.deb**
-- 📴 Offline usage
-- 🚀 Production-ready architecture
+[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=flat-square&logo=linux)](https://ubuntu.com/)
+[![Framework](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![UI](https://img.shields.io/badge/UI-Electron-47848F?style=flat-square&logo=electron)](https://www.electronjs.org/)
+[![AI](https://img.shields.io/badge/AI-PyTorch%20%2F%20MMYOLO-EE4C2C?style=flat-square&logo=pytorch)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](##-license)
 
 ---
 
-## Architecture Overview
+## 📖 Overview
+
+**Seal Detector Pro** is a high-performance Linux desktop application designed for real-time detection and inspection of container door security seals. Ideal for ports, logistics hubs, and cargo terminals, it replaces manual checks with consistent, AI-driven verification.
+
+### Key Features
+
+- 🔐 **Real-Time Detection:** Automatic identification of security seals via AI.
+- 🎥 **Versatile Input:** Supports USB Webcams, RTSP IP Cameras, and MJPEG streams.
+- ⚡ **High Performance:** Native GPU acceleration (NVIDIA CUDA) for low-latency inference.
+- 📦 **Desktop Native:** Run as a standalone `.AppImage` or `.deb` — no browser or Python setup required for end-users.
+- 🌐 **Hybrid Licensing:** Remote license validation with offline grace periods via Firebase.
+
+> [!NOTE]
+> **Release Status:** The `.AppImage` and `.deb` installers are currently in final testing and will be available for download in the [Releases](https://github.com/mani9441/seal-detector-pro/releases) section very soon. Stay tuned!
+
+---
+
+## Architecture & Tech Stack
+
+```mermaid
+graph TD
+    A[Electron UI] -->|IPC| B[FastAPI Local Backend]
+    B --> C{AI Engine}
+    C --> D[OpenCV / Video Stream]
+    C --> E[MMYOLO / PyTorch Models]
+    B --> F[Firebase Firestore]
+    F -.->|License Check| B
 
 ```
-Electron (Desktop UI)
-↓
-FastAPI (Local backend)
-↓
-AI Detection Model (MMDetection / MMYOLO)
-↓
-OpenCV + PyTorch (CUDA)
 
-```
-
-- **Electron** provides the desktop window and user interface
-- **FastAPI** runs a local backend for video streaming and inference
-- **AI model** detects container door seals in real time
-- **Firebase Firestore** controls license validation and activation
+- **Frontend:** Electron, HTML5, CSS3.
+- **Backend:** FastAPI (Python), PyInstaller.
+- **Computer Vision:** OpenCV, PyTorch, MMDetection.
+- **Infrastructure:** Firebase (Auth/Licensing).
 
 ---
 
 ## 📂 Project Structure
 
-```
-
+```text
 seal-detector-pro/
-├── backend_app.py        # FastAPI application
-├── backend_start.py      # Backend launcher (PyInstaller entry)
-├── frontend/             # HTML/CSS UI
-├── configs/              # AI model configuration files (not in git)
-├── models/               # Model weights (not tracked in git)
-├── electron/
-│   ├── main.js           # Electron main process
-│   ├── license.js        # License validation logic
-│   ├── package.json      # Electron builder configuration
-│   └── icon.png          # Application icon
-├── requirements.txt
-└── README.md
+├── electron/           # Main process & desktop config
+├── frontend/           # UI Assets (HTML/JS/CSS)
+├── backend_app.py      # Core FastAPI logic
+├── configs/            # AI Model configurations (Internal)
+├── requirements.txt    # Python dependencies
+└── README.md           # Documentation
 
 ```
 
-> ⚠️ Large AI model weight files are intentionally **excluded** from the repository.
+> [!IMPORTANT]
+> Large AI model weights (`.pth` / `.onnx`) are excluded from the repository to maintain performance.
 
 ---
 
-## Supported Platforms
+## ⬇️ Downloads
 
-- ✅ Linux (Ubuntu / Debian-based)
-- ✅ NVIDIA GPU with CUDA support
-- ⚠️ Windows / macOS not currently supported
+| Package Type                | Status         | Link                                          |
+| :-------------------------- | :------------- | :-------------------------------------------- |
+| **AppImage** (Portable)     | ⏳ Coming Soon | [Check Releases](https://github.com/mani9441) |
+| **Debian Installer** (.deb) | ⏳ Coming Soon | [Check Releases](https://github.com/mani9441) |
 
----
-
-## 🔐 Licensing System
-
-Seal Detector Pro includes a **remote license validation system** designed for commercial use:
-
-- License is validated on application startup
-- Offline usage is allowed within a defined grace period
-- Licenses can be remotely disabled or extended
-- No application rebuild required to revoke access
-
-This allows centralized control over deployed installations.
+> [!TIP]
+> Click the **"Watch"** button at the top of this repository to be notified the moment the first version is released.
 
 ---
 
-## 🚀 Build & Packaging (Internal)
+## 🚀 Installation & Usage
 
-The application is packaged using:
+### Option 1: AppImage (Portable)
 
-- **PyInstaller (onedir)** for the Python backend
-- **Electron Builder** for:
-  - AppImage
-  - `.deb` installer
+1. Download `Seal-Detector-Pro.AppImage`.
+2. `chmod +x Seal-Detector-Pro.AppImage`
+3. Execute: `./Seal-Detector-Pro.AppImage`
 
-End users **do not need Python or Node.js** installed.
+### Option 2: Debian Installer
 
----
+```bash
+sudo apt install ./seal-detector-pro_amd64.deb
 
-## 🧾 Distribution
-
-Final build artifacts:
-
-- `Seal Detector Pro.AppImage`
-- `seal-detector-pro_amd64.deb`
-
-Users can:
-
-- Run the AppImage directly
-- Install via the `.deb` package
+```
 
 ---
 
-## 🔧 Technology Stack
+## 💻 System Requirements
 
-- Python
-- FastAPI
-- OpenCV
-- PyTorch (CUDA)
-- MMDetection / MMYOLO
-- Electron
-- Node.js
-- Firebase Firestore
+| Component        | Requirement                                      |
+| ---------------- | ------------------------------------------------ |
+| **OS**           | Ubuntu 20.04+ or Debian-based Linux              |
+| **GPU**          | NVIDIA GPU (Recommended for CUDA acceleration)   |
+| **Architecture** | x86_64                                           |
+| **Network**      | Internet required for initial license activation |
 
 ---
 
-## 📌 Notes
+## 📄 Licensing & Terms
 
-- This repository contains **application source code only**
-- AI model weights are excluded
-- Direct installation packages will be availble soon
+<details>
+<summary><b>Click to expand License Details (Proprietary)</b></summary>
+
+### Ownership
+
+Seal Detector Pro is **Proprietary Software**. All intellectual property rights belong to the author.
+
+### Restrictions
+
+- No redistribution or reselling without explicit permission.
+- No reverse engineering or tampering with the license validation.
+- Usage is limited to the licensed period and number of seats.
+
+</details>
 
 ---
 
-## 📄 License
+## 👨‍💻 Author
 
-This project is proprietary software.  
-All rights reserved.
+<p align="left">
+<img src="https://github.com/mani9441.png?size=100" width="100" alt="Manikanta Kalyanam" style="border-radius: 50%;">
+</p>
 
-Unauthorized redistribution or modification is prohibited without explicit permission.
+**Manikanta Kalyanam** _Project Maintainer & Lead Developer_
+
+[![GitHub](https://img.shields.io/badge/GitHub-mani9441-181717?style=flat&logo=github)](https://github.com/mani9441)
+[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=flat&logo=gmail)](mailto:k.manikanta9441@gmail.com)
+
+---
