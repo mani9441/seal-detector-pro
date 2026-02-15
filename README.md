@@ -8,6 +8,15 @@
 [![AI](https://img.shields.io/badge/AI-PyTorch%20%2F%20MMYOLO-EE4C2C?style=flat-square&logo=pytorch)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](##-license)
 
+<p align="center">
+  <img src="screenshots/main_view.png" width="45%" alt="Main Dashboard" />
+  <img src="screenshots/detection_view.png" width="45%" alt="AI Detection" />
+</p>
+
+<p align="center">
+  <i>The interface is designed for high-visibility in industrial environments (Ports & Terminals).</i>
+</p>
+
 ---
 
 ## 📖 Overview
@@ -134,5 +143,3 @@ Seal Detector Pro is **Proprietary Software**. All intellectual property rights 
 
 [![GitHub](https://img.shields.io/badge/GitHub-mani9441-181717?style=flat&logo=github)](https://github.com/mani9441)
 [![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=flat&logo=gmail)](mailto:k.manikanta9441@gmail.com)
-
----
