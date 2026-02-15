@@ -1,0 +1,35 @@
+{
+  "name": "seal-detector-pro",
+  "productName": "Seal Detector Pro",
+  "version": "1.0.0",
+  "main": "main.js",
+  "description": "Real-time Seal Detection using AI",
+  "author": {
+    "name": "MANIKANTA KALYANAM",
+    "url": "https://github.com/mani9441/"
+  },
+  "homepage": "https://github.com/mani9441/seal-detector-pro",
+  "build": {
+    "appId": "com.manikantakalyanam.sealdetector",
+    "asar": false,
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "maintainer": "MANIKANTA KALYANAM <https://github.com/mani9441/>",
+      "synopsis": "AI-powered seal detection",
+      "icon": "icon.png"
+    }
+  },
+  "win": {
+    "target": "nsis"
+  },
+  "dependencies": {
+    "firebase": "^12.9.0"
+  },
+  "devDependencies": {
+    "electron": "^40.4.1"
+  }
+}
