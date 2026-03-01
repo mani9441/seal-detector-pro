@@ -6,21 +6,30 @@
   "description": "Real-time Seal Detection using AI",
   "author": {
     "name": "MANIKANTA KALYANAM",
-    "url": "https://github.com/mani9441/"
+    "url": "https://github.com/mani9441/",
+    "email": "k.manikanta9441@gmail.com"
   },
   "homepage": "https://github.com/mani9441/seal-detector-pro",
   "build": {
     "appId": "com.manikantakalyanam.sealdetector",
     "asar": false,
+    "compression": "maximum",
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
-      "category": "Utility",
-      "maintainer": "MANIKANTA KALYANAM <https://github.com/mani9441/>",
-      "synopsis": "AI-powered seal detection",
-      "icon": "icon.png"
+      "category": "Utility"
     }
   },
   "win": {
