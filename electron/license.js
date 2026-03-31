@@ -1,24 +1,14 @@
-
-
-
 const { initializeApp } = require("firebase/app");
 const { getFirestore, doc, getDoc } = require("firebase/firestore");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
+const CACHE_FILE = path.join(
+  os.homedir(),
+  ".seal_license_cache.json"
+);
 
-// 🔒 Firebase config (SAFE to embed – no secrets)
-const firebaseConfig = {
-  apiKey: process.env.FB_API_KEY,
-  authDomain: process.env.FB_AUTH_DOMAIN,
-  projectId: process.env.FB_PROJECT_ID
-};
-
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const CACHE_FILE = path.join(__dirname, "license_cache.json");
 const LICENSE_ID = "seal-detector-pro";
 const MAX_OFFLINE_DAYS = 30;
 
@@ -27,12 +17,25 @@ function todayISO() {
 }
 
 function daysBetween(a, b) {
-  return Math.floor(
-    (new Date(b) - new Date(a)) / (1000 * 60 * 60 * 24)
-  );
+  return Math.floor((new Date(b) - new Date(a)) / (1000 * 60 * 60 * 24));
 }
 
-async function checkLicense() {
+async function checkLicense(config) {
+  // ✅ Initialize Firebase HERE (not at top)
+  const firebaseConfig = {
+    apiKey: config.FB_API_KEY,
+    authDomain: config.FB_AUTH_DOMAIN,
+    projectId: config.FB_PROJECT_ID,
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  console.log("License check:", {
+    project: config.FB_PROJECT_ID,
+    today: todayISO()
+  });
+
   try {
     const ref = doc(db, "licenses", LICENSE_ID);
     const snap = await getDoc(ref);
@@ -47,7 +50,7 @@ async function checkLicense() {
       throw new Error("License disabled remotely");
     }
 
-    if (todayISO() > data.valid_until) {
+    if (new Date(todayISO()) > new Date(data.valid_until)) {
       throw new Error("License expired");
     }
 
@@ -56,7 +59,7 @@ async function checkLicense() {
       CACHE_FILE,
       JSON.stringify({
         valid_until: data.valid_until,
-        checked_at: todayISO()
+        checked_at: todayISO(),
       })
     );
 
@@ -65,7 +68,12 @@ async function checkLicense() {
   } catch (err) {
     // Offline fallback
     if (fs.existsSync(CACHE_FILE)) {
-      const cached = JSON.parse(fs.readFileSync(CACHE_FILE));
+      let cached;
+      try {
+        cached = JSON.parse(fs.readFileSync(CACHE_FILE));
+      } catch {
+        throw err;
+      }
 
       const offlineDays = daysBetween(cached.checked_at, todayISO());
 

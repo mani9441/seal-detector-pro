@@ -3,6 +3,7 @@
   "productName": "Seal Detector Pro",
   "version": "1.0.0",
   "main": "main.js",
+  "type": "module",
   "description": "Real-time Seal Detection using AI",
   "author": {
     "name": "MANIKANTA KALYANAM",
@@ -14,6 +15,12 @@
     "appId": "com.manikantakalyanam.sealdetector",
     "asar": false,
     "compression": "maximum",
+    "extraResources": [
+      {
+        "from": "electron/config.json",
+        "to": "config.json"
+      }
+    ],
     "linux": {
       "target": [
         {
@@ -30,15 +37,20 @@
         }
       ],
       "category": "Utility"
+    },
+    "win": {
+      "target": "nsis"
     }
-  },
-  "win": {
-    "target": "nsis"
   },
   "dependencies": {
     "firebase": "^12.9.0"
   },
   "devDependencies": {
-    "electron": "^40.4.1"
+    "electron": "^40.4.1",
+    "electron-builder": "^26.8.1"
+  },
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
   }
 }

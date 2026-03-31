@@ -44,3 +44,4 @@ models
 bin
 bin/backend_start
 electron/package-lock.json
+electron/config.json
