@@ -33,6 +33,7 @@ async function checkLicense(config) {
   });
 
   try {
+    // ===== ONLINE CHECK =====
     const ref = doc(db, "licenses", LICENSE_ID);
     const snap = await getDoc(ref);
 
@@ -51,40 +52,69 @@ async function checkLicense(config) {
       throw new Error("valid_until missing in Firestore");
     }
 
+    // 🚨 HARD STOP if expired (NO CACHE FALLBACK)
     if (new Date(todayISO()) > new Date(data.valid_until)) {
+      // Optional: delete cache so it can't be reused
+      if (fs.existsSync(CACHE_FILE)) {
+        fs.unlinkSync(CACHE_FILE);
+      }
+
       throw new Error("License expired");
     }
 
-    console.log("Writing cache to:", CACHE_FILE);
-
+    // ✅ Save cache ONLY when valid online
     fs.writeFileSync(
       CACHE_FILE,
       JSON.stringify({
         valid_until: data.valid_until,
         checked_at: todayISO(),
-      }),
+      })
     );
 
     console.log("Cache updated successfully ✅");
 
     return true;
+
   } catch (err) {
+    console.warn("Online license check failed:", err.message);
+
+    // ===== ONLY FALLBACK IF NETWORK ERROR =====
+    const isNetworkError =
+      err.code === "unavailable" ||
+      err.message.includes("network") ||
+      err.message.includes("fetch") ||
+      err.message.includes("timeout");
+
+    if (!isNetworkError) {
+      // ❌ If server responded (expired/disabled/etc), DO NOT use cache
+      throw err;
+    }
+
+    console.log("Using offline cache...");
+
     if (fs.existsSync(CACHE_FILE)) {
       let cached;
+
       try {
         cached = JSON.parse(fs.readFileSync(CACHE_FILE));
       } catch {
-        throw err;
+        throw new Error("Corrupted license cache");
       }
 
       const offlineDays = daysBetween(cached.checked_at, todayISO());
 
-      if (todayISO() <= cached.valid_until && offlineDays <= MAX_OFFLINE_DAYS) {
+      if (
+        todayISO() <= cached.valid_until &&
+        offlineDays <= MAX_OFFLINE_DAYS
+      ) {
+        console.log("Offline license valid ✅");
         return true;
       }
+
+      throw new Error("Offline license expired");
     }
 
-    throw err;
+    throw new Error("No internet and no valid license cache");
   }
 }
 

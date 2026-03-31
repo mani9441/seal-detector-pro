@@ -17,18 +17,12 @@
     "compression": "maximum",
     "extraResources": [
       {
-        "from": "electron/config.json",
+        "from": "config.json",
         "to": "config.json"
       }
     ],
     "linux": {
       "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64"
-          ]
-        },
         {
           "target": "deb",
           "arch": [
