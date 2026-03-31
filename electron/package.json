@@ -1,10 +1,10 @@
 {
   "name": "seal-detector-pro",
   "productName": "Seal Detector Pro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
   "type": "module",
-  "description": "Real-time Seal Detection using AI",
+  "description": "Real-time Seal Detection using AI - license fix",
   "author": {
     "name": "MANIKANTA KALYANAM",
     "url": "https://github.com/mani9441/",
