@@ -1,17 +1,14 @@
-const { initializeApp } = require("firebase/app");
-const { getFirestore, doc, getDoc } = require("firebase/firestore");
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import fs from "fs";
+import path from "path";
+import os from "os";
 
-const CACHE_FILE = path.join(
-  os.homedir(),
-  ".seal_license_cache.json"
-);
+const CACHE_FILE = path.join(os.homedir(), ".seal_license_cache.json");
 
 const LICENSE_ID = "seal-detector-pro";
 const MAX_OFFLINE_DAYS = 30;
-
+  
 function todayISO() {
   return new Date().toISOString().split("T")[0];
 }
@@ -21,7 +18,6 @@ function daysBetween(a, b) {
 }
 
 async function checkLicense(config) {
-  // ✅ Initialize Firebase HERE (not at top)
   const firebaseConfig = {
     apiKey: config.FB_API_KEY,
     authDomain: config.FB_AUTH_DOMAIN,
@@ -33,7 +29,7 @@ async function checkLicense(config) {
 
   console.log("License check:", {
     project: config.FB_PROJECT_ID,
-    today: todayISO()
+    today: todayISO(),
   });
 
   try {
@@ -45,28 +41,34 @@ async function checkLicense(config) {
     }
 
     const data = snap.data();
+    console.log("License data:", data);
 
     if (data.enabled !== true) {
       throw new Error("License disabled remotely");
+    }
+
+    if (!data.valid_until) {
+      throw new Error("valid_until missing in Firestore");
     }
 
     if (new Date(todayISO()) > new Date(data.valid_until)) {
       throw new Error("License expired");
     }
 
-    // Cache locally for offline use
+    console.log("Writing cache to:", CACHE_FILE);
+
     fs.writeFileSync(
       CACHE_FILE,
       JSON.stringify({
         valid_until: data.valid_until,
         checked_at: todayISO(),
-      })
+      }),
     );
 
-    return true;
+    console.log("Cache updated successfully ✅");
 
+    return true;
   } catch (err) {
-    // Offline fallback
     if (fs.existsSync(CACHE_FILE)) {
       let cached;
       try {
@@ -77,10 +79,7 @@ async function checkLicense(config) {
 
       const offlineDays = daysBetween(cached.checked_at, todayISO());
 
-      if (
-        todayISO() <= cached.valid_until &&
-        offlineDays <= MAX_OFFLINE_DAYS
-      ) {
+      if (todayISO() <= cached.valid_until && offlineDays <= MAX_OFFLINE_DAYS) {
         return true;
       }
     }
@@ -89,4 +88,4 @@ async function checkLicense(config) {
   }
 }
 
-module.exports = { checkLicense };
+export { checkLicense };
