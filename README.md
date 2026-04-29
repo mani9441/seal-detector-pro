@@ -135,11 +135,8 @@ Seal Detector Pro is **Proprietary Software**. All intellectual property rights 
 
 ## 👨‍💻 Author
 
-<p align="left">
-<img src="https://github.com/mani9441.png?size=100" width="100" alt="Manikanta Kalyanam" style="border-radius: 50%;">
-</p>
 
-**Manikanta Kalyanam** _Project Maintainer & Lead Developer_
 
-[![GitHub](https://img.shields.io/badge/GitHub-mani9441-181717?style=flat&logo=github)](https://github.com/mani9441)
-[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=flat&logo=gmail)](mailto:k.manikanta9441@gmail.com)
+**CHIRANJEEVI KARRI*** _Project Maintainer & Lead Developer_
+
+
